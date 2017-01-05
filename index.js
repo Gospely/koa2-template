@@ -1,16 +1,23 @@
-const app = new Koa();
+var koa = require('koa');
+var app = koa();
 
-// uses async arrow functions
-app.use(async (ctx, next) => {
-  try {
-    await next(); // next is now a function
-  } catch (err) {
-    ctx.body = { message: err.message };
-    ctx.status = err.status || 500;
-  }
+// logger
+
+app.use(function *(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  console.log('%s %s - %s', this.method, this.url, ms);
 });
 
-app.use(async ctx => {
-  const user = await User.getById(ctx.session.userid); // await instead of yield
-  ctx.body = user; // ctx instead of this
+// response
+
+app.use(function *(){
+
+  this.body = 'Hello World';
+});
+
+app.listen(3000,function() {
+  console.log(new Date() +
+    ': server is running, listening on port 3000');
 });
