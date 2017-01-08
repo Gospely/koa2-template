@@ -1,20 +1,11 @@
-var koa = require('koa');
-var app = koa();
+const Koa = require('koa');
+const app = new Koa();
 
-// logger
+// 此处开始堆叠各种中间件
+//...
 
-app.use(function *(next){
-  var start = new Date;
-  yield next;
-  var ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
-});
-
-// response
-
-app.use(function *(){
-
-  this.body = 'Hello World';
+app.use(ctx => {
+  ctx.body = 'Hello Koa';
 });
 
 app.listen(8000,function() {
